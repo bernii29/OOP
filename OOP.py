@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Szoba:
     def __init__(self, szobaszam: int, ar: int):
         self.szobaszam=szobaszam
@@ -15,7 +17,7 @@ class Szalloda:
     def __init__(self, nev):
         self.szobak=[]
 
-    def szoba_hozzaad(self, szoba):
+    def szobahozzaad(self, szoba):
         self.szobak.append(szoba)
 
 class Foglalas:
@@ -45,3 +47,26 @@ class FoglalasKezeles:
     def listazas(self):
         for foglalas in self.foglalasok:
             print(f"Szoba: {foglalas.szoba.szobaszam}, Dátum: {foglalas.datum}")
+
+def interfesz(foglalaskezelo):
+    while True:
+        print("Mit szeretne csinálni?")
+        print("1. Foglalás")
+        print("2. Lemondás")
+        print("3. Foglalások listázása")
+        print("4. Kilépés")
+
+        valasztas=int(input("Adja meg a művelet számát!"))
+
+        if valasztas==1:
+            szobaszam=int(input("Adja meg a szoba számát!"))
+            datum=input("Adja meg a foglalás dátumát!")
+            foglalaskezelo.foglalas(szobaszam, datum)
+        elif  valasztas==2:
+            szobaszam = int(input("Adja meg a szoba számát!"))
+            datum = input("Adja meg a lemondás dátumát!")
+            foglalaskezelo.lemondas(szobaszam, datum)
+        elif valasztas==3:
+            foglalaskezelo.listazas()
+        elif valasztas==4:
+            break
