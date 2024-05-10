@@ -32,21 +32,36 @@ class FoglalasKezeles:
 
     def foglalas(self, szobaszam, datum):
         for szoba in self.szalloda.szobak:
-            if szoba.szobaszam==szobaszam:
-                self.foglalasok.append(Foglalas(szoba, datum))
+            if szoba.szobaszam == szobaszam:
+                foglalas_datum = datetime.strptime(datum, '%Y-%m-%d')
+                if foglalas_datum < datetime.now():
+                    print("A foglalás dátuma már elmúlt.")
+                    return None
+                for foglalas in self.foglalasok:
+                    if foglalas.szoba.szobaszam == szobaszam and foglalas.datum == foglalas_datum:
+                        print("A szoba ekkor már foglalt.")
+                        return None
+                self.foglalasok.append(Foglalas(szoba, foglalas_datum))
                 return szoba.ar
+        print("Nincs ilyen szoba.")
         return None
 
     def lemondas(self, szobaszam, datum):
+        lemondas_datum = datetime.strptime(datum, '%Y-%m-%d')
         for foglalas in self.foglalasok:
-            if foglalas.szoba.szobaszam==szobaszam and foglalas.datum==datum:
+            if foglalas.szoba.szobaszam == szobaszam and foglalas.datum == lemondas_datum:
                 self.foglalasok.remove(foglalas)
-                return True
-        return False
+                print("A foglalás sikeresen lemondva.")
+                return
+        print("Nincs ilyen foglalás.")
 
-    def listazas(self):
-        for foglalas in self.foglalasok:
-            print(f"Szoba: {foglalas.szoba.szobaszam}, Dátum: {foglalas.datum}")
+    def listaz(self):
+        if self.foglalasok:
+            print("Foglalások:")
+            for foglalas in self.foglalasok:
+                print(f"Szoba: {foglalas.szoba.szobaszam}, Dátum: {foglalas.datum.strftime('%Y-%m-%d')}")
+        else:
+            print("Nincs foglalás.")
 
 def interfesz(foglalaskezelo):
     while True:
@@ -58,15 +73,15 @@ def interfesz(foglalaskezelo):
 
         valasztas=int(input("Adja meg a művelet számát!"))
 
-        if valasztas==1:
+        if valasztas=="1":
             szobaszam=int(input("Adja meg a szoba számát!"))
             datum=input("Adja meg a foglalás dátumát!")
             foglalaskezelo.foglalas(szobaszam, datum)
-        elif  valasztas==2:
+        elif  valasztas=="2":
             szobaszam = int(input("Adja meg a szoba számát!"))
             datum = input("Adja meg a lemondás dátumát!")
             foglalaskezelo.lemondas(szobaszam, datum)
-        elif valasztas==3:
+        elif valasztas=="3":
             foglalaskezelo.listazas()
-        elif valasztas==4:
+        elif valasztas=="4":
             break
